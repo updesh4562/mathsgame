@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A fun and interactive Math Game with multiple difficulty levels. Play and test your math skills from easy to hard.">
+    <meta name="keywords" content="math game, online math quiz, fun math challenge, interactive learning">
+    <meta name="author" content="Your Name">
+    <title>Math Game - Fun Learning</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body { background-color: #f4f4f4; text-align: center; padding: 20px; }
+        .game-container { max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0,0,0,0.1); }
+        .btn { font-size: 18px; margin: 5px; }
+        .question { font-size: 24px; font-weight: bold; margin: 20px 0; }
+        .input-answer { font-size: 20px; text-align: center; width: 100px; }
+        .emoji { font-size: 50px; position: absolute; left: 50%; transform: translateX(-50%); opacity: 0; transition: opacity 0.5s ease-in-out; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-primary">Math Game - Choose Your Level</h1>
+        <div class="game-container">
+            <label for="difficulty">Select Difficulty:</label>
+            <select id="difficulty" class="form-select mb-3">
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+            <button class="btn btn-success" onclick="startGame()">Start Game</button>
+            <div id="game-area" class="mt-3" style="display: none;">
+                <p class="question" id="question">What is 2 + 2?</p>
+                <input type="number" id="answer" class="form-control input-answer" placeholder="Your Answer">
+                <button class="btn btn-primary" onclick="checkAnswer()">Submit</button>
+                <p id="result"></p>
+                <p>Score: <span id="score">0</span></p>
+                <div id="emoji" class="emoji">😊❤️</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let score = 0;
+        let num1, num2, correctAnswer;
+        function startGame() {
+            document.getElementById("game-area").style.display = "block";
+            generateQuestion();
+        }
+        function generateQuestion() {
+            let level = document.getElementById("difficulty").value;
+            if (level === "easy") { 
+                num1 = Math.floor(Math.random() * 100) + 1; 
+                num2 = Math.floor(Math.random() * 100) + 1; 
+                let operator = Math.random() < 0.5 ? "-" : "+";
+                correctAnswer = operator === "+" ? num1 + num2 : num1 - num2;
+                document.getElementById("question").innerText = `What is ${num1} ${operator} ${num2}?`;
+            }
+            else if (level === "medium") { 
+                num1 = Math.floor(Math.random() * 50) + 1; 
+                num2 = Math.floor(Math.random() * 50) + 1; 
+                let operator = Math.random() < 0.5 ? "*" : "/";
+                correctAnswer = operator === "*" ? num1 * num2 : Math.floor(num1 / num2);
+                document.getElementById("question").innerText = `What is ${num1} ${operator} ${num2}?`;
+            }
+            else { 
+                num1 = Math.floor(Math.random() * 100) + 1; 
+                num2 = Math.floor(Math.random() * 100) + 1; 
+                let num3 = Math.floor(Math.random() * 50) + 1;
+                let operator1 = Math.random() < 0.5 ? "*" : "/";
+                let operator2 = Math.random() < 0.5 ? "-" : "+";
+                let intermediate = operator1 === "*" ? num1 * num2 : Math.floor(num1 / num2);
+                correctAnswer = operator2 === "+" ? intermediate + num3 : intermediate - num3;
+                document.getElementById("question").innerText = `What is (${num1} ${operator1} ${num2}) ${operator2} ${num3}?`;
+            }
+        }
+        function checkAnswer() {
+            let userAnswer = parseInt(document.getElementById("answer").value);
+            let resultText = document.getElementById("result");
+            let emoji = document.getElementById("emoji");
+            if (userAnswer === correctAnswer) {
+                resultText.innerText = "सही उत्तर! बहुत बढ़िया! 🎉";
+                resultText.style.color = "green";
+                emoji.innerText = "😊❤️";
+                score++;
+            } else {
+                resultText.innerText = "गलत जवाब! कोशिश जारी रखो!You can do it 💪";
+                resultText.style.color = "red";
+                emoji.innerText = "😡🔥";
+            }
+            emoji.style.opacity = 1;
+            setTimeout(() => { emoji.style.opacity = 0; }, 1000);
+            document.getElementById("score").innerText = score;
+            generateQuestion();
+            document.getElementById("answer").value = "";
+        }
+    </script>
+</body>
+</html>
